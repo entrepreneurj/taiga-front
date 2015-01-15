@@ -85,6 +85,7 @@ urls = {
     "project-admin-project-profile-modules": "/project/:project/admin/project-profile/modules"
     "project-admin-project-values-us-status": "/project/:project/admin/project-values/us-status"
     "project-admin-project-values-us-points": "/project/:project/admin/project-values/us-points"
+    "project-admin-project-values-us-custom-fields": "/project/:project/admin/project-values/us-custom-fields"
     "project-admin-project-values-task-status": "/project/:project/admin/project-values/task-status"
     "project-admin-project-values-issue-status": "/project/:project/admin/project-values/issue-status"
     "project-admin-project-values-issue-types": "/project/:project/admin/project-values/issue-types"

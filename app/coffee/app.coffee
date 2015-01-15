@@ -84,6 +84,8 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $tgEven
         {templateUrl: "/partials/admin-project-values-us-status.html"})
     $routeProvider.when("/project/:pslug/admin/project-values/us-points",
         {templateUrl: "/partials/admin-project-values-us-points.html"})
+    $routeProvider.when("/project/:pslug/admin/project-values/us-custom-fields",
+        {templateUrl: "/partials/views/modules/admin/admin-us-custom-fields.html"})
     $routeProvider.when("/project/:pslug/admin/project-values/task-status",
         {templateUrl: "/partials/admin-project-values-task-status.html"})
     $routeProvider.when("/project/:pslug/admin/project-values/issue-status",

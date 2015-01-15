@@ -1,0 +1,22 @@
+extends ../../../dummy-layout
+
+block head
+    title Taiga  Your agile, free, and open source project management tool
+
+block content
+    div.wrapper
+        sidebar.menu-secondary.sidebar(tg-admin-navigation="project-values")
+            include ../admin-menu
+
+        sidebar.menu-tertiary.sidebar(tg-admin-navigation="values-task-status")
+            include ../admin-submenu-project-values
+
+        section.main.admin-common
+            include ../../components/mainTitle
+            p.admin-subtitle If you need custom fields on your User Stories, specify it here. You will find it on your user story detail
+
+            div.project-values-options
+                a.button.button-green.show-add-new(href="", title="Add New")
+                    span Add custom field
+
+            include us-custom-fields-table

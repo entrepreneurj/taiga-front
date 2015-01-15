@@ -124,6 +124,8 @@ exports.files = function () {
         'modules/admin/default-values',
         'modules/admin/project-values',
         'modules/admin/third-parties',
+        'modules/admin/admin-us-custom-fields',
+        'modules/admin/us-custom-fields-table',
 
         //Modules user Settings
         'modules/user-settings/user-profile',
