@@ -16,11 +16,17 @@ block content
                 include ../../components/mainTitle
                 p.admin-subtitle Export your project to save a backup or to create a new one based on this.
 
-            //div.admin-project-export
-            //    a.button.button-green.button-export(href="", title="Export your project") Export
+            div.admin-project-export
+                a.button.button-green.button-export(href="", title="Export your project") Export
 
-            div.admin-project-export-synchronous
-                div.spin
-                    img(src="/svg/spinner-circle.svg", alt="loading...")
-                h3 We are generating your dump file
-                p Please don't close this page.</br> Your file will be automatically downloaded when ready.
+            // Synchronous. Show when export. If export success, hide and show export button
+                div.admin-project-export-synchronous
+                    div.spin
+                        img(src="/svg/spinner-circle.svg", alt="loading...")
+                    h3 We are generating your dump file
+                    p Please don't close this page.</br> Your file will be automatically downloaded when ready.
+
+            // Asynchronous. Don't hide until user reloads.
+                div.admin-project-export-asynchronous
+                    h3 We are generating your dump file
+                    p We will send you an email to [ email ] when ready
