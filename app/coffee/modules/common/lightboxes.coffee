@@ -201,7 +201,7 @@ BlockLightboxDirective = ($rootscope, $tgrepo, $confirm, lightboxService, $loadi
             block(item)
 
     return {
-        templateUrl: "/partials/views/modules/lightbox-block.html"
+        templateUrl: "common/lightbox/lightbox-block.html"
         link: link
         require: "ngModel"
     }
@@ -547,7 +547,7 @@ AssignedToLightboxDirective = (lightboxService, lightboxKeyboardNavigationServic
             $el.off()
 
     return {
-        templateUrl: "/partials/views/modules/lightbox-assigned-to.html"
+        templateUrl: "common/lightbox/lightbox-assigned-to.html"
         link:link
     }
 
@@ -632,7 +632,7 @@ WatchersLightboxDirective = ($repo, lightboxService, lightboxKeyboardNavigationS
             $el.off()
 
     return {
-        templateUrl: "/partials/views/modules/lightbox-users.html"
+        templateUrl: "common/lightbox/lightbox-users.html"
         link:link
     }
 

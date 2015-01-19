@@ -750,7 +750,7 @@ UsRolePointsSelectorDirective = ($rootscope) ->
 module.directive("tgUsRolePointsSelector", ["$rootScope", UsRolePointsSelectorDirective])
 
 
-UsPointsDirective = ($repo) ->
+UsPointsDirective = ($repo, $tgTemplate) ->
     rolesTemplate = _.template("""
     <ul class="popover pop-role">
         <% _.each(roles, function(role) { %>
@@ -940,7 +940,7 @@ UsPointsDirective = ($repo) ->
 
     return {link: link}
 
-module.directive("tgBacklogUsPoints", ["$tgRepo", UsPointsDirective])
+module.directive("tgBacklogUsPoints", ["$tgRepo", "$tgTemplate", UsPointsDirective])
 
 #############################################################################
 ## Burndown graph directive
