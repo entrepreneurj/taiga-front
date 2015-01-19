@@ -25,6 +25,8 @@ block content
                                 a(href="{{ project.url }}")
                                     h2(tg-bo-bind="project.name")
                                     p(tg-bo-bind="project.description")
+                                    //if imported project show badge
+                                    // span.icon.icon-upload.import-badge(title="Imported project")
 
                 div.all-projects
                     h1 Projects
@@ -34,3 +36,4 @@ block content
                         a.button.button-green.create-project-button(href="", ng-click="ctrl.newProject()", title="") Create project
                         a.button.button-blackish.import-project-button(href="", title="Import project")
                             span.icon.icon-upload
+
