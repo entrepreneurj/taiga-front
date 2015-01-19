@@ -12,9 +12,10 @@
 
 //Spin
 @-webkit-keyframes rotate {
-  50% {
-    -webkit-transform: rotate(360deg);
-  }
+    50% {
+        transform: rotate(360deg);
+        filter: invert(1);
+    }
 }
 
 @keyframes rotate {

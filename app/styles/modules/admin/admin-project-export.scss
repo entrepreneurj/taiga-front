@@ -9,7 +9,8 @@
         margin: 0 auto;
         width: 2.5rem;
         img {
-            animation: rotate 1.5s cubic-bezier(.49,.05,.32,1.04) infinite alternate;
+            animation: rotate 1.5s cubic-bezier(.00, .05, .87, 1.04) infinite alternate;
+            animation-timing-function: ease-in-out;
             transform-origin: 32 32;
             width: 100%;
         }
@@ -20,8 +21,8 @@
         background: $whitish;
         color: $gray;
         margin: .5rem;
-        text-align: center;
         padding: .5rem;
+        text-align: center;
     }
     p {
         color: $gray-light;
