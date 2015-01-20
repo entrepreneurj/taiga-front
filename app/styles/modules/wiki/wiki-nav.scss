@@ -31,18 +31,17 @@
             }
         }
         &.loading {
-            background: $grayer;
-            border: 1px solid #b8b8b8;
             margin: 0;
             padding: 8px;
             text-align: center;
             width: 100%;
-            .icon-spinner {
-                color: $whitish;
-                float: none;
-            }
-            span {
-                animation: loading .5s linear, spin 1s linear infinite;
+            .loading-spinner {
+                animation: rotate 1.5s cubic-bezier(.00, .05, .87, 1.04) infinite alternate;
+                animation-timing-function: ease-in-out;
+                max-height: 1rem;
+                margin: 0 auto;
+                max-width: 1rem;
+                transform-origin: 32 32;
             }
         }
     }
