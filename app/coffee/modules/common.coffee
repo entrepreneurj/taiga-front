@@ -194,7 +194,13 @@ module.factory("$tgQqueue", ["$q", Qqueue])
 
 Template = ($templateCache) ->
     return {
-        get: (name) -> $templateCache.get(name)
+        get: (name, lodash = false) =>
+            tmp = $templateCache.get(name)
+
+            if lodash
+                tmp = _.template(tmp)
+
+            return tmp
     }
 
 module.factory("$tgTemplate", ["$templateCache", Template])

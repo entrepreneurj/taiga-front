@@ -257,17 +257,13 @@ modules = [
     "taigaPlugins",
     "taigaIntegrations",
 
+    # template cache
+    "templates"
+
     # Vendor modules
     "ngRoute",
     "ngAnimate",
-<<<<<<< HEAD
 ].concat(_.map(@.taigaContribPlugins, (plugin) -> plugin.module))
-=======
-
-    # template cache
-    "templates"
-]
->>>>>>> template cache partials
 
 # Main module definition
 module = angular.module("taiga", modules)
