@@ -13,18 +13,29 @@
                 position: relative;
             }
             img {
-                border: 2px solid $white;
                 border-radius: 8%;
                 width: 100%;
             }
             .overlay {
-                background: rgba($white, .9);
+                align-content: center;
+                align-items: center;
+                background: rgba($blackish, .9);
                 bottom: 0;
                 display: none;
                 left: 0;
+                justify-content: center;
                 position: absolute;
                 right: 0;
                 top: 0;
+                width: 100%;
+                img {
+                    flex-grow: 0;
+                    animation: rotate 1.5s cubic-bezier(.00, .05, .87, 1.04) infinite alternate;
+                    animation-timing-function: ease-in-out;
+                    border: none;
+                    transform-origin: 32 32;
+                    width: 30%;
+                }
             }
             .icon-spinner {
                 @extend %xlarge;
