@@ -36,12 +36,9 @@
             text-align: center;
             width: 100%;
             .loading-spinner {
-                animation: rotate 1.5s cubic-bezier(.00, .05, .87, 1.04) infinite alternate;
-                animation-timing-function: ease-in-out;
+                @extend %loading-spinner;
                 max-height: 1rem;
-                margin: 0 auto;
                 max-width: 1rem;
-                transform-origin: 32 32;
             }
         }
     }

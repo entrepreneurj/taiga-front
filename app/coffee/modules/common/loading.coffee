@@ -27,6 +27,7 @@ class TgLoadingService extends taiga.Service
             target.data('loading-old-content', target.html())
             target.addClass('loading')
             target.html("<img class='loading-spinner' src='/svg/spinner-circle.svg' alt='loading...' />")
+            debugger
 
     finish: (target) ->
         if target.hasClass('loading')

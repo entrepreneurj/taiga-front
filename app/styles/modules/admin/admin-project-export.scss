@@ -9,9 +9,7 @@
         margin: 0 auto;
         width: 2.5rem;
         img {
-            animation: rotate 1.5s cubic-bezier(.00, .05, .87, 1.04) infinite alternate;
-            animation-timing-function: ease-in-out;
-            transform-origin: 32 32;
+            @extend %loading-spinner;
             width: 100%;
         }
     }
