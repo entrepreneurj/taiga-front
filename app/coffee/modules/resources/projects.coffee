@@ -25,11 +25,11 @@ taiga = @.taiga
 resourceProvider = ($repo, $http, $urls) ->
     service = {}
 
-    service.get = (id) ->
-        return $repo.queryOne("projects", id)
+    service.get = (projectId) ->
+        return $repo.queryOne("projects", projectId)
 
-    service.getBySlug = (slug) ->
-        return $repo.queryOne("projects", "by_slug?slug=#{slug}")
+    service.getBySlug = (projectSlug) ->
+        return $repo.queryOne("projects", "by_slug?slug=#{projectSlug}")
 
     service.list = ->
         return $repo.queryMany("projects")
@@ -55,8 +55,12 @@ resourceProvider = ($repo, $http, $urls) ->
     service.memberStats = (projectId) ->
         return $repo.queryOneRaw("projects", "#{projectId}/member_stats")
 
-    service.tagsColors = (id) ->
-        return $repo.queryOne("projects", "#{id}/tags_colors")
+    service.tagsColors = (projectId) ->
+        return $repo.queryOne("projects", "#{projectId}/tags_colors")
+
+    service.export = (projectId) ->
+        url = "#{$urls.resolve("exporter")}/#{projectId}"
+        return $http.get(url)
 
     return (instance) ->
         instance.projects = service

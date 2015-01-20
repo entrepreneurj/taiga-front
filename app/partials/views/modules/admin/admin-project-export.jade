@@ -11,22 +11,16 @@ block content
         sidebar.menu-tertiary.sidebar(tg-admin-navigation="export")
             include ../admin-submenu-project-profile
 
-        section.main.admin-common
+        section.main.admin-common(tg-project-export)
             header
                 include ../../components/mainTitle
                 p.admin-subtitle Export your project to save a backup or to create a new one based on this.
 
-            div.admin-project-export
+            div.admin-project-export-buttons
                 a.button.button-green.button-export(href="", title="Export your project") Export
 
-            // Synchronous. Show when export. If export success, hide and show export button
-                div.admin-project-export-synchronous
-                    div.spin
-                        img(src="/svg/spinner-circle.svg", alt="loading...")
-                    h3 We are generating your dump file
-                    p Please don't close this page.</br> Your file will be automatically downloaded when ready.
-
-            // Asynchronous. Don't hide until user reloads.
-                div.admin-project-export-asynchronous
-                    h3 We are generating your dump file
-                    p We will send you an email to [ email ] when ready
+            div.admin-project-export-result.hidden
+                div.spin.hidden
+                    img(src="/svg/spinner-circle.svg", alt="loading...")
+                h3.result-title
+                p.result-message
