@@ -148,11 +148,12 @@ class ConfirmService extends taiga.Service
 
         return defered.promise
 
-    success: (message) ->
+    success: (title, message) ->
         el = angular.element(".lightbox-generic-success")
 
         # Render content
-        el.find("h2.title").html(message)
+        el.find("h2.title").html(title) if title
+        el.find("p.message").html(message) if message
         defered = @q.defer()
 
         # Assign event handlers

@@ -103,7 +103,7 @@ urls = {
 
     # Export/Import
     "exporter": "/exporter"
-    "importer": "/importer"
+    "importer": "/importer/load_dump"
 }
 
 # Initialize api urls service

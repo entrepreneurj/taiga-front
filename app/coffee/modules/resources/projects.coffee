@@ -21,8 +21,10 @@
 
 
 taiga = @.taiga
+sizeFormat = @.taiga.sizeFormat
 
-resourceProvider = ($repo, $http, $urls) ->
+
+resourceProvider = ($config, $repo, $http, $urls, $auth, $q) ->
     service = {}
 
     service.get = (projectId) ->
@@ -62,9 +64,51 @@ resourceProvider = ($repo, $http, $urls) ->
         url = "#{$urls.resolve("exporter")}/#{projectId}"
         return $http.get(url)
 
+    service.import = (file) ->
+        defered = $q.defer()
+
+        maxFileSize = $config.get("maxUploadFileSize", null)
+        if maxFileSize and file.size > maxFileSize
+            response = {
+                status: 413,
+                data: _error_message: "'#{file.name}' (#{sizeFormat(file.size)}) is too heavy for our oompa
+                                       loompas, try it with a smaller than (#{sizeFormat(maxFileSize)})"
+            }
+            defered.reject(response)
+            return defered.promise
+
+        uploadComplete = (evt) =>
+            response = {}
+            try
+                response.data = JSON.parse(evt.target.responseText)
+            catch
+                response.data = {}
+            response.status = evt.target.status
+
+            defered.resolve(response) if response.status in [201, 202]
+            defered.reject(response)
+
+        uploadFailed = (evt) =>
+            defered.reject("fail")
+
+        data = new FormData()
+        data.append('dump', file)
+
+        xhr = new XMLHttpRequest()
+        xhr.addEventListener("load", uploadComplete, false)
+        xhr.addEventListener("error", uploadFailed, false)
+
+        xhr.open("POST", $urls.resolve("importer"))
+        xhr.setRequestHeader("Authorization", "Bearer #{$auth.getToken()}")
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.send(data)
+
+        return defered.promise
+
     return (instance) ->
         instance.projects = service
 
 
 module = angular.module("taigaResources")
-module.factory("$tgProjectsResourcesProvider", ["$tgRepo", "$tgHttp", "$tgUrls", resourceProvider])
+module.factory("$tgProjectsResourcesProvider", ["$tgConfig", "$tgRepo", "$tgHttp", "$tgUrls", "$tgAuth", "$q",
+                                                resourceProvider])

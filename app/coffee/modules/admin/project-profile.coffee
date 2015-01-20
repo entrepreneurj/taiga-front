@@ -231,16 +231,16 @@ ProjectExportDirective = ($window, $rs, $confirm) ->
         hideSpinner = -> spinnerEl.addClass("hidden")
 
         resultTitleEl = $el.find(".result-title")
-        setLoadingTitle = -> resultTitleEl.html("We are generating your dump file")
-        setAsyncTitle = -> resultTitleEl.html("We are generating your dump file")
-        setSyncTitle = -> resultTitleEl.html("Your dump file ir ready!")
+        setLoadingTitle = -> resultTitleEl.html("We are generating your dump file") # TODO: i18n
+        setAsyncTitle = -> resultTitleEl.html("We are generating your dump file") # TODO: i18n
+        setSyncTitle = -> resultTitleEl.html("Your dump file ir ready!") # TODO: i18n
 
         resultMessageEl = $el.find(".result-message ")
-        setLoadingMessage = -> resultMessageEl.html("Please don't close this page.")
-        setAsyncMessage = -> resultMessageEl.html("We will send you an email when ready.")
+        setLoadingMessage = -> resultMessageEl.html("Please don't close this page.") # TODO: i18n
+        setAsyncMessage = -> resultMessageEl.html("We will send you an email when ready.") # TODO: i18n
         setSyncMessage = (url) -> resultMessageEl.html("If the download doesn't start automatically click
                                                        <a href='#{url}' target='_blank' title='Download
-                                                       the dump file'>here.")
+                                                       the dump file'>here.") # TODO: i18n
 
         showLoadingMode = ->
             showSpinner()
@@ -280,11 +280,14 @@ ProjectExportDirective = ($window, $rs, $confirm) ->
                 showErrorMode()
 
                 errorMsg = "Our oompa loompas have some problems generasting your dump.
-                            Please try again. "
+                            Please try again. " # TODO: i18n
 
                 if result.status == 429  # TOO MANY REQUESTS
                     errorMsg = "Sorry, our oompa loompas are very busy right now.
-                                Please try again in a few minutes. "
+                                Please try again in a few minutes. " # TODO: i18n
+                else if result.data?._error_message
+                    errorMsg = "Our oompa loompas have some problems generasting your dump:
+                                #{result.data._error_message}" # TODO: i18n
 
                 $confirm.notify("error", errorMsg)
 
