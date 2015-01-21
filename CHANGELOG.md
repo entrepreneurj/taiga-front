@@ -3,6 +3,8 @@
 ## 1.5.0 ??? (unreleased)
 
 ### Features
+- Taiga webhooks
+  + Created admin panel with webhook settings.
 - Not showing closed milestones by default in backlog view.
 - In kanban view an archived user story status doesn't show his content by default.
 

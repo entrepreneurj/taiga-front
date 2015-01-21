@@ -85,6 +85,10 @@ urls = {
     "priorities": "/priorities"
     "severities": "/severities"
     "project-modules": "/projects/%s/modules"
+    "webhooks": "/webhooks"
+    "webhooks-test": "/webhooks/%s/test"
+    "webhooklogs": "/webhooklogs"
+    "webhooklogs-resend": "/webhooklogs/%s/resend"
 
     # History
     "history/us": "/history/userstory"
@@ -141,5 +145,7 @@ module.run([
     "$tgHistoryResourcesProvider",
     "$tgKanbanResourcesProvider",
     "$tgModulesResourcesProvider",
+    "$tgWebhooksResourcesProvider",
+    "$tgWebhookLogsResourcesProvider",
     initResources
 ])

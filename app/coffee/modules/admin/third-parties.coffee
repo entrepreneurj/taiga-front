@@ -27,6 +27,214 @@ debounce = @.taiga.debounce
 
 module = angular.module("taigaAdmin")
 
+#############################################################################
+## Webhooks
+#############################################################################
+
+class WebhooksController extends mixOf(taiga.Controller, taiga.PageMixin, taiga.FiltersMixin)
+    @.$inject = [
+        "$scope",
+        "$tgRepo",
+        "$tgResources",
+        "$routeParams",
+        "$appTitle"
+    ]
+
+    constructor: (@scope, @repo, @rs, @params, @appTitle) ->
+        bindMethods(@)
+
+        @scope.sectionName = "Webhooks" #i18n
+        @scope.project = {}
+
+        promise = @.loadInitialData()
+
+        promise.then () =>
+            @appTitle.set("Webhooks - " + @scope.project.name)
+
+        promise.then null, @.onInitialDataError.bind(@)
+
+        @scope.$on "webhooks:reload", @.loadWebhooks
+
+    loadWebhooks: ->
+        return @rs.webhooks.list(@scope.projectId).then (webhooks) =>
+            @scope.webhooks = webhooks
+
+    loadProject: ->
+        return @rs.projects.get(@scope.projectId).then (project) =>
+            @scope.project = project
+            @scope.$emit('project:loaded', project)
+            return project
+
+    loadInitialData: ->
+        promise = @repo.resolve({pslug: @params.pslug}).then (data) =>
+            @scope.projectId = data.project
+            return data
+
+        return promise.then(=> @.loadProject())
+                      .then(=> @.loadWebhooks())
+
+module.controller("WebhooksController", WebhooksController)
+
+#############################################################################
+## Webhook Directive
+#############################################################################
+
+WebhookDirective = ($rs, $repo, $confirm, $loading) ->
+    link = ($scope, $el, $attrs) ->
+        webhook = $scope.$eval($attrs.tgWebhook)
+
+        updateLogs = () ->
+            $rs.webhooklogs.list(webhook.id).then (webhooklogs) =>
+                webhooklogs = webhooklogs.reverse()
+                for  log in webhooklogs
+                    statusText = String(log.status)
+                    log.validStatus = statusText.length==3 and statusText[0]="2"
+                    log.prettySentData = JSON.stringify(log.request_data.data, undefined, 2)
+                    log.prettySentHeaders = JSON.stringify(JSON.parse(log.request_headers), undefined, 2)
+                    log.prettyDate = moment(log.created).format("DD MMM YYYY [at] hh:mm:ss")
+
+                webhook.logs = webhooklogs
+                updateShowHideHistoryText()
+
+        updateShowHideHistoryText = () ->
+            textElement = $el.find(".toggle-history")
+            if webhook.logs and webhook.logs.length > 0
+                textElement.text("(Hide history)")
+            else
+                textElement.text("(Show history)")
+
+        showVisualizationMode = () ->
+            $el.find(".edition-mode").addClass("hidden")
+            $el.find(".visualization-mode").removeClass("hidden")
+
+        showEditMode = () ->
+            $el.find(".visualization-mode").addClass("hidden")
+            $el.find(".edition-mode").removeClass("hidden")
+
+        cancel = () ->
+            showVisualizationMode()
+            $scope.$apply ->
+                webhook.revert()
+
+        save = debounce 2000, (target) ->
+            form = target.parents("form").checksley()
+            return if not form.validate()
+
+            value = target.scope().value
+            promise = $repo.save(webhook)
+            promise.then =>
+                showVisualizationMode()
+
+            promise.then null, (data) ->
+                $confirm.notify("error")
+                form.setErrors(data)
+
+        $el.on "click", ".test-webhook", () ->
+            $rs.webhooks.test(webhook.id).then =>
+                updateLogs()
+
+        $el.on "click", ".edit-webhook", () ->
+            showEditMode()
+
+        $el.on "click", ".cancel-existing", () ->
+            cancel()
+
+        $el.on "click", ".edit-existing", (event) ->
+            event.preventDefault()
+            target = angular.element(event.currentTarget)
+            save(target)
+
+        $el.on "keyup", ".edition-mode input", (event) ->
+            if event.keyCode == 13
+                target = angular.element(event.currentTarget)
+                saveWebhook(target)
+            else if event.keyCode == 27
+                target = angular.element(event.currentTarget)
+                cancel(target)
+
+        $el.on "click", ".delete-webhook", () ->
+            title = "Delete webhook"  #TODO: i18in
+            message = "Webhook '#{webhook.name}'" #TODO: i18in
+
+            $confirm.askOnDelete(title, message).then (finish) =>
+                onSucces = ->
+                    finish()
+                    $el.remove()
+
+                onError = ->
+                    finish(false)
+                    $confirm.notify("error")
+
+                $repo.remove(webhook).then(onSucces, onError)
+
+        $el.on "click", ".toggle-history", (event) ->
+            if not webhook.logs? or webhook.logs.length == 0
+                updateLogs().then ->
+                    updateShowHideHistoryText()
+            else
+                $scope.$apply () ->
+                    webhook.logs = []
+                    updateShowHideHistoryText()
+
+        $el.on "click", ".history-single", (event) ->
+            target = angular.element(event.currentTarget)
+            target.toggleClass("history-single-open")
+            target.siblings(".history-single-response").toggleClass("open")
+            # target.find(".toggle-log").toggleClass("open")
+
+        $el.on "click", ".resend-request", (event) ->
+            event.preventDefault()
+            target = angular.element(event.currentTarget)
+            log = target.data("log")
+            $rs.webhooklogs.resend(log).then () =>
+                updateLogs()
+
+    return {link:link}
+
+module.directive("tgWebhook", ["$tgResources", "$tgRepo", "$tgConfirm", "$tgLoading", WebhookDirective])
+
+
+#############################################################################
+## New webhook Directive
+#############################################################################
+
+NewWebhookDirective = ($rs, $repo, $confirm, $loading) ->
+    link = ($scope, $el, $attrs) ->
+        webhook = $scope.$eval($attrs.tgWebhook)
+
+        initializeNewValue = ->
+            $scope.newValue = {
+                "name": ""
+                "url": ""
+                "key": ""
+            }
+
+        initializeNewValue()
+
+        $el.on "click", ".add-new", debounce 2000, (event) ->
+            event.preventDefault()
+            form = $el.checksley()
+            return if not form.validate()
+
+            $scope.newValue.project = $scope.project.id
+            promise = $repo.create("webhooks", $scope.newValue)
+            promise.then =>
+                $scope.$broadcast("webhooks:reload")
+                initializeNewValue()
+
+            promise.then null, (data) ->
+                $confirm.notify("error")
+                form.setErrors(data)
+
+        $el.on "click", ".cancel-new", (event) ->
+            event.preventDefault()
+            $scope.$apply ->
+                initializeNewValue()
+
+    return {link:link}
+
+module.directive("tgNewWebhook", ["$tgResources", "$tgRepo", "$tgConfirm", "$tgLoading", NewWebhookDirective])
+
 
 #############################################################################
 ## Github Controller
