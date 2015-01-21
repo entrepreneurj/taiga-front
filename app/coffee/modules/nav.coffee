@@ -85,9 +85,13 @@ ProjectsNavigationDirective = ($rootscope, animationFrame, $timeout, tgLoader, $
         <a class="button button-green create-project-button" href="" title="Create new project">
             Create project
         </a>
-        <a class="button button-blackish import-project-button" href="" title="Import previous project">
-            <span class="icon icon-upload"></span>
-        </a>
+
+        <div tg-import-project-button>
+            <a class="button button-blackish import-project-button" href="" title="Import project">
+                <span class="icon icon-upload"></span>
+            </a>
+            <input class="import-file hidden" type="file">
+        </div>
     </div>
 
     <div class="projects-pagination" tg-projects-pagination>
