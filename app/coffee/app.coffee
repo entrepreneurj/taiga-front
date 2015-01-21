@@ -99,6 +99,8 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $tgEven
         {templateUrl: "/partials/admin-memberships.html"})
     $routeProvider.when("/project/:pslug/admin/roles",
         {templateUrl: "/partials/admin-roles.html"})
+    $routeProvider.when("/project/:pslug/admin/third-parties/webhooks",
+        {templateUrl: "/partials/views/modules/admin/admin-third-parties-webhooks.html"})
     $routeProvider.when("/project/:pslug/admin/third-parties/github",
         {templateUrl: "/partials/admin-third-parties-github.html"})
     $routeProvider.when("/project/:pslug/admin/third-parties/gitlab",
