@@ -117,7 +117,7 @@ ProjectProfileDirective = ($repo, $confirm, $loading, $navurls, $location) ->
                 if data._error_message
                     $confirm.notify("error", data._error_message)
 
-        submitButton = $el.find(".submit-button");
+        submitButton = $el.find(".submit-button")
 
         $el.on "submit", "form", submit
         $el.on "click", ".submit-button", submit
@@ -239,7 +239,7 @@ ProjectExportDirective = ($window, $rs, $confirm) ->
         setLoadingMessage = -> resultMessageEl.html("Please don't close this page.") # TODO: i18n
         setAsyncMessage = -> resultMessageEl.html("We will send you an email when ready.") # TODO: i18n
         setSyncMessage = (url) -> resultMessageEl.html("If the download doesn't start automatically click
-                                                       <a href='#{url}' target='_blank' title='Download
+                                                       <a href='#{url}' download title='Download
                                                        the dump file'>here.") # TODO: i18n
 
         showLoadingMode = ->
@@ -258,7 +258,6 @@ ProjectExportDirective = ($window, $rs, $confirm) ->
             hideSpinner()
             setSyncTitle()
             setSyncMessage(url)
-            showButtons()
 
         showErrorMode = ->
             hideSpinner()

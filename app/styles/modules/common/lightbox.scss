@@ -391,17 +391,6 @@
 .lightbox-generic-success,
 .lightbox-generic-error {
     section {
-        flex-basis: 420px;
-        flex-grow: 0;
-        width: 420px;
-    }
-    h2 {
-        line-height: 2rem;
-    }
-}
-
-.lightbox-import {
-    section {
         flex-basis: 500px;
         flex-grow: 0;
         flex-shrink: 0;
