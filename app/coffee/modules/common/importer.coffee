@@ -33,7 +33,10 @@ ImportProjectButtonDirective = ($rs, $confirm, $location, $navUrls) ->
             file = event.target.files[0]
             return if not file
 
+            loader = $confirm.loader("Uploading dump file")
+
             onSuccess = (result) ->
+                loader.stop()
                 if result.status == 202 # Async mode
                     title = "Our Oompa Loompas are importing your project" # TODO: i18n
                     message = "This process could take a few minutes </br> We will send you
@@ -46,6 +49,7 @@ ImportProjectButtonDirective = ($rs, $confirm, $location, $navUrls) ->
                     $confirm.notify("success", "Your project has been imported successfuly.") # TODO: i18n
 
             onError = (result) ->
+                loader.stop()
                 console.log "Error", result
                 errorMsg = "Our oompa loompas have some problems importing your dump data.
                             Please try again. " # TODO: i18n
@@ -59,7 +63,8 @@ ImportProjectButtonDirective = ($rs, $confirm, $location, $navUrls) ->
 
                 $confirm.notify("error", errorMsg)
 
-            $rs.projects.import(file).then(onSuccess, onError)
+            loader.start()
+            $rs.projects.import(file, loader.update).then(onSuccess, onError)
 
     return {link: link}
 

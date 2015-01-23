@@ -389,12 +389,27 @@
 
 
 .lightbox-generic-success,
-.lightbox-generic-error {
+.lightbox-generic-error,
+.lightbox-generic-loading {
     section {
         flex-basis: 500px;
         flex-grow: 0;
         flex-shrink: 0;
         width: 500px;
+    }
+    .spin {
+        margin: 0 auto;
+        width: 2.5rem;
+        img {
+            @extend %loading-spinner;
+            width: 100%;
+        }
+    }
+    .progress {
+        .bar {
+            background: $green-taiga;
+            height: 20px;
+        }
     }
     h2 {
         line-height: 2rem;

@@ -24,7 +24,7 @@ taiga = @.taiga
 sizeFormat = @.taiga.sizeFormat
 
 
-resourceProvider = ($config, $repo, $http, $urls, $auth, $q) ->
+resourceProvider = ($config, $repo, $http, $urls, $auth, $q, $rootScope) ->
     service = {}
 
     service.get = (projectId) ->
@@ -64,7 +64,7 @@ resourceProvider = ($config, $repo, $http, $urls, $auth, $q) ->
         url = "#{$urls.resolve("exporter")}/#{projectId}"
         return $http.get(url)
 
-    service.import = (file) ->
+    service.import = (file, statusUpdater) ->
         defered = $q.defer()
 
         maxFileSize = $config.get("maxUploadFileSize", null)
@@ -77,7 +77,18 @@ resourceProvider = ($config, $repo, $http, $urls, $auth, $q) ->
             defered.reject(response)
             return defered.promise
 
+        uploadProgress = (evt) =>
+            percent = "#{Math.round((evt.loaded / evt.total) * 100)}%"
+            message = "upload #{sizeFormat(evt.loaded)} of #{sizeFormat(evt.total)}"
+            statusUpdater("in-progress", null, message, percent)
+
         uploadComplete = (evt) =>
+            statusUpdater("done", "Importing Project", "This process can take a while, please keep the window open.") # i18n
+
+        uploadFailed = (evt) =>
+            statusUpdater("error")
+
+        complete = (evt) =>
             response = {}
             try
                 response.data = JSON.parse(evt.target.responseText)
@@ -88,15 +99,19 @@ resourceProvider = ($config, $repo, $http, $urls, $auth, $q) ->
             defered.resolve(response) if response.status in [201, 202]
             defered.reject(response)
 
-        uploadFailed = (evt) =>
+        failed = (evt) =>
             defered.reject("fail")
 
         data = new FormData()
         data.append('dump', file)
 
         xhr = new XMLHttpRequest()
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
+        xhr.upload.addEventListener("progress", uploadProgress, false)
+        xhr.upload.addEventListener("load", uploadComplete, false)
+        xhr.upload.addEventListener("error", uploadFailed, false)
+        xhr.upload.addEventListener("abort", uploadFailed, false)
+        xhr.addEventListener("load", complete, false)
+        xhr.addEventListener("error", failed, false)
 
         xhr.open("POST", $urls.resolve("importer"))
         xhr.setRequestHeader("Authorization", "Bearer #{$auth.getToken()}")

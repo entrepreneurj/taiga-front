@@ -171,6 +171,30 @@ class ConfirmService extends taiga.Service
 
         return defered.promise
 
+    loader: (title, message) ->
+        el = angular.element(".lightbox-generic-loading")
+
+        # Render content
+        el.find("h2.title").html(title) if title
+        el.find("p.message").html(message) if message
+
+        return {
+            start: => @lightboxService.open(el)
+            stop: => @lightboxService.close(el)
+            update: (status, title, message, percent) =>
+                el.find("h2.title").html(title) if title
+                el.find("p.message").html(message) if message
+
+                if percent
+                    el.find(".spin").addClass("hidden")
+                    el.find(".progress").removeClass("hidden")
+                    el.find(".progress > .bar").width(percent)
+                    el.find(".progress > span").html(percent)
+                else
+                    el.find(".spin").removeClass("hidden")
+                    el.find(".progress").addClass("hidden")
+        }
+
     notify: (type, message, title, time) ->
         # NOTE: Typesi are: error, success, light-error
         #       See partials/components/notification-message.jade)
